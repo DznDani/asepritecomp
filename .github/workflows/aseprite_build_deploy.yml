@@ -4,8 +4,8 @@ on:
   push:
     branches: [ "main", "master" ]
   schedule:
-    - cron: '0 12 * * *' # Comprueba actualizaciones automáticamente cada día al mediodía UTC
-  workflow_dispatch: # Permite ejecutar la compilación con un botón manualmente
+    - cron: '0 12 * * *'
+  workflow_dispatch:
 
 jobs:
   check-version:
@@ -57,10 +57,10 @@ jobs:
       - name: Instalar compilador Ninja
         run: choco install ninja -y
 
-      - name: Descargar dependencias de renderizado (Skia m102)
+      - name: Descargar dependencias de renderizado (Skia m119)
         shell: pwsh
         run: |
-          Invoke-WebRequest -Uri "https://github.com/aseprite/skia/releases/download/m102-861e4743af/Skia-Windows-Release-x64.zip" -OutFile "skia.zip"
+          Invoke-WebRequest -Uri "https://github.com/aseprite/skia/releases/download/m119-0a7a4c0108/Skia-Windows-Release-x64.zip" -OutFile "skia.zip"
           Expand-Archive -Path skia.zip -DestinationPath skia
 
       - name: Configurar entorno de construcción CMake
@@ -68,7 +68,7 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force -Path aseprite_src\build
           cd aseprite_src\build
-          cmake -DCMAKE_BUILD_TYPE=Release -DMAKE_CXX_FLAGS="/MP" -G Ninja -DLAF_BACKEND=skia -DSKIA_DIR="$env:GITHUB_WORKSPACE\skia" -DSKIA_LIBRARY_DIR="$env:GITHUB_WORKSPACE\skia\out\Release-x64" -DSKIA_LIBRARY="$env:GITHUB_WORKSPACE\skia\out\Release-x64\skia.lib" ..
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="/MP" -G Ninja -DLAF_BACKEND=skia -DSKIA_DIR="$env:GITHUB_WORKSPACE\skia" -DSKIA_LIBRARY_DIR="$env:GITHUB_WORKSPACE\skia\out\Release-x64" -DSKIA_LIBRARY="$env:GITHUB_WORKSPACE\skia\out\Release-x64\skia.lib" ..
 
       - name: Compilar binarios de Aseprite
         shell: pwsh

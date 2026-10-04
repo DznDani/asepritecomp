@@ -7,6 +7,10 @@ on:
     branches:
       - master
 
+# ESTO SOLUCIONA EL ERROR: Otorga permisos para crear el Release
+permissions:
+  contents: write
+
 env:
   BUILD_TYPE: Release
   
